@@ -1,0 +1,454 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/assets/img/logo.png">
+
+    <title>Rocket.Chat Admin Tools</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+  
+    <style>
+      #loading {
+        position: fixed;
+        display: none;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        text-align: center;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 99;
+      }
+
+      #loading-image {
+        position: absolute;
+        margin: auto;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        }
+    </style>
+  </head>
+
+  <body>
+
+    <div id="loading">
+      <img id="loading-image" src="/assets/img/Rocket.gif" alt="Loading..." />
+    </div>
+
+    <header>
+      <div class="collapse bg-dark" id="navbarHeader">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-8 col-md-7 py-4">
+              <h4 class="text-white">Info</h4>
+              <p class="text-muted">You are logged using the server: <span id="serverUrl">serverUrl</span> and your username is: <span id="username">username</span></p>
+            </div>
+            <div class="col-sm-4 offset-md-1 py-4">
+              <h4 class="text-white">Contact</h4>
+              <ul class="list-unstyled">
+                <li><a href="/tools" class="text-white">Tools</a></li>
+                <li><a href="javascript:void(0)" onclick="destroySession()" class="text-white">Clear Session</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="navbar navbar-dark bg-dark box-shadow">
+        <div class="container d-flex justify-content-between">
+          <a href="#" class="navbar-brand d-flex align-items-center">
+            <img src="/assets/img/logo.png" style="width: 20px; margin-right: 15px;">
+            <strong>Rocket.Chat Admin Tools</strong>
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main role="main">
+
+      <section class="jumbotron text-center">
+        <div class="container">
+          <h1 class="jumbotron-heading">Rocket.Chat Admin Tools - Users</h1>
+          <p class="lead text-muted">A few tools that can help admin do a quick job :)</p>
+        </div>
+      </section>
+
+      <div class="album py-5 bg-light">
+        <div class="container" style="width: max-content !important;">
+
+          <div class="row">
+            <div class="col-md-12" style="text-align: center;">
+
+              <h5 style="margin: 15px;">Actions</h5>
+              <div class="btn-group" role="group" aria-label="Basic example" style="margin-bottom: 15px;">
+                <button id="disable-rows" class="btn btn-primary">Disable Selected</button>
+                <button id="enable-rows" class="btn btn-primary">Enable Selected</button>
+                <button id="delete-rows" class="btn btn-primary">Delete Selected</button>
+                <button id="delete-disabled-rows" class="btn btn-primary">Delete Disabled Rows</button>
+                <button id="show-disabled" class="btn btn-primary">Show Disabled</button>
+                <button id="show-enabled" class="btn btn-primary">Show Enabled</button>
+                <button id="show-all" class="btn btn-success">Show All</button>
+            </div>
+
+            <div id="table"></div>
+            <h5 style="margin: 15px;">Export Actions</h5>
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button id="download-csv" class="btn btn-primary">Download CSV</button>
+                <button id="download-json" class="btn btn-primary">Download JSON</button>
+                <button id="download-xlsx" class="btn btn-primary">Download XLSX</button>
+                <button id="download-pdf" class="btn btn-primary">Download PDF</button>
+                <button id="download-html" class="btn btn-primary">Download HTML</button>
+            </div>
+
+            </div>
+           
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="text-muted">
+      <div class="container">
+        <p class="float-right">
+          <a href="#">Back to top</a>
+        </p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js"></script>
+    <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/holder.min.js"></script>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>   
+    
+    <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator_bootstrap5.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+
+    <script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
+
+
+
+
+    <script>
+
+    let configs = ''
+
+    checkConfig()
+    function checkConfig(){
+      configs = JSON.parse(localStorage.getItem('configs'))
+
+      if(!configs.authToken){
+        window.location.href = "/"
+      }
+      else{
+        $('#serverUrl').text(configs.serverUrl)
+        $('#username').text(configs.username)
+
+      }
+    }
+
+    function destroySession(){
+      localStorage.clear()
+      window.location.href = "/"
+    }
+
+    const url = configs.serverUrl;
+    const authToken = configs.authToken;
+    const userId = configs.userId;
+    const currentUser = configs.username;
+
+    var dataSet = []
+
+
+    async function getData(status){      
+      let response = await fetch(`${url}/api/v1/users.list`, {
+        method: 'get',
+        headers: {
+          'X-Auth-Token': authToken,
+          'X-User-Id': userId
+        }
+      })
+      let data = await response.json()
+      if(data.users.length > 0){
+
+        for (let i = 0; i < data.users.length; i++) {
+          const element = data.users[i];
+          let emails = data.users[i].emails
+          if(data.users[i].emails === undefined){
+            emails = 'undefined'
+          }
+          if(emails != 'undefined'){
+            emails = data.users[i].emails[0]['address']
+          }
+          
+
+          let roles = data.users[i].roles
+
+          let found = roles.includes("app"); // returns true
+          let daysIdle = ''
+
+          if(!found){
+            let dateNow = moment()
+            let lastLogin = moment(element.lastLogin)
+
+            var duration = moment.duration(dateNow.diff(lastLogin));
+            var time = Math.floor(duration.asMinutes());
+
+            //minutes to hour (and days) converter
+            function ConvertMinutes(num){
+              d = Math.floor(num/1440); // 60*24
+              h = Math.floor((num-(d*1440))/60);
+              m = Math.round(num%60);
+
+              if(d>0){
+                return(d + " days, " + h + " hours, "+m+" minutes");
+              }else{
+                return(h + " hours, "+m+" minutes");
+              }
+            }
+            
+            daysIdle = ConvertMinutes(time)
+            
+          }
+
+          if(status === 'all' && !found){
+            dataSet.push({id: element._id, daysIdle: daysIdle, active: element.active, username: element.username, name: element.name, emails: emails, lastLogin: moment(element.lastLogin).format('MMMM Do YYYY, h:mm:ss a'), status: element.status})
+          }
+          if(status === 'enabled' && element.active === true && !found){
+            dataSet.push({id: element._id, daysIdle: daysIdle, active: element.active, username: element.username, name: element.name, emails: emails, lastLogin: moment(element.lastLogin).format('MMMM Do YYYY, h:mm:ss a'), status: element.status})
+          }
+          if(status === 'disabled' && element.active === false && !found){
+            dataSet.push({id: element._id, daysIdle: daysIdle, active: element.active, username: element.username, name: element.name, emails: emails, lastLogin: moment(element.lastLogin).format('MMMM Do YYYY, h:mm:ss a'), status: element.status})
+          }
+
+          
+        }
+
+        data.users.forEach(element => {
+
+        });
+      }      
+    }
+    
+    createNewTable()
+
+    
+    async function createNewTable() {
+      await getData('all')
+      var table = new Tabulator("#table", {
+        height:500, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+        data:dataSet, //assign data to table
+        layout:"fitColumns", //fit columns to width of table (optional)
+        pagination:"local",
+        paginationSize:50,
+        paginationSizeSelector:[25, 50, 100, 500, 1000, 2000],
+        columns:[ //Define Table Columns
+          {formatter:"rowSelection", titleFormatter:"rowSelection", hozAlign:"center", headerSort:false, cellClick:function(e, cell){
+            cell.getRow().toggleSelect();
+          }},
+          {title:"id", field:"id"},
+          {title:"daysIdle", field:"daysIdle"},
+          {title:"active", field:"active"},
+          {title:"username", field:"username", headerFilter:"input"},
+          {title:"name", field:"name", headerFilter:"input"},
+          {title:"emails", field:"emails", headerFilter:"input"},
+          {title:"lastLogin", field:"lastLogin"},
+          {title:"status", field:"status"},
+        ],
+      });
+
+      document.getElementById("download-csv").addEventListener("click", function(){
+          table.download("csv", "data.csv");
+      });
+
+      //trigger download of data.json file
+      document.getElementById("download-json").addEventListener("click", function(){
+          table.download("json", "data.json");
+      });
+
+      //trigger download of data.xlsx file
+      document.getElementById("download-xlsx").addEventListener("click", function(){
+          table.download("xlsx", "data.xlsx", {sheetName:"My Data"});
+      });
+
+      //trigger download of data.pdf file
+      document.getElementById("download-pdf").addEventListener("click", function(){
+          table.download("pdf", "data.pdf", {
+              orientation:"portrait", //set page orientation to portrait
+              title:"Example Report", //add title to report
+          });
+      });
+
+      //trigger download of data.html file
+      document.getElementById("download-html").addEventListener("click", function(){
+          table.download("html", "data.html", {style:true});
+      });
+      document.getElementById("disable-rows").addEventListener("click", function(){
+        var selectedRows = table.getSelectedData(); //get array of currently selected row components.
+        disableFunction(selectedRows)
+      })
+
+      document.getElementById("enable-rows").addEventListener("click", function(){
+        var selectedRows = table.getSelectedData(); //get array of currently selected row components.
+        enableFunction(selectedRows)
+        
+      })
+
+      document.getElementById("delete-rows").addEventListener("click", function(){
+        var selectedRows = table.getSelectedData(); //get array of currently selected row components.
+        deleteFunction(selectedRows)
+        
+      })
+
+     
+      document.getElementById("show-disabled").addEventListener("click", async function(){
+        dataSet = []          
+        await getData('disabled')   
+        table.replaceData(dataSet)
+      })
+
+      document.getElementById("show-enabled").addEventListener("click", async function(){
+        dataSet = []          
+        await getData('enabled')   
+        table.replaceData(dataSet)
+      })
+
+      document.getElementById("show-all").addEventListener("click", async function(){
+        dataSet = []          
+        await getData('all')   
+        table.replaceData(dataSet)
+      })
+
+      document.getElementById("delete-disabled-rows").addEventListener("click", async function(){
+        dataSet = []
+        await getData('disabled')
+        table.replaceData(dataSet)
+        var disabledRows = table.getData();
+        deleteFunction(disabledRows)
+        await getData('all')   
+        table.replaceData(dataSet)
+        
+      })
+
+      async function deleteFunction(data) {
+        var i = 0
+        $('#loading').show();
+        for (i = 0; i < data.length; i++) {            
+          const element = data[i];
+          console.log('Deleted: ', element.id, '. Total: ', i)
+          await fetch(`${url}/api/v1/users.delete`, {
+            method: 'post',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Auth-Token': authToken,
+              'X-User-Id': userId
+            },
+            body: JSON.stringify({
+              userId: element.id,
+              confirmRelinquish: true
+            })
+          })
+        }
+
+        dataSet = []          
+        await getData('all')   
+        table.replaceData(dataSet)
+        console.log('Done Deleting: ', i, ' registers.')
+        $('#loading').hide();
+      }
+
+      async function enableFunction(data) {
+        var i = 0
+        $('#loading').show();
+        for (i = 0; i < data.length; i++) {            
+          const element = data[i];
+          console.log('Enabled: ', element.id, '. Total: ', i)
+          await fetch(`${url}/api/v1/users.setActiveStatus`, {
+            method: 'post',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Auth-Token': authToken,
+              'X-User-Id': userId
+            },
+            body: JSON.stringify({
+              userId: element.id,
+              activeStatus : true,
+              confirmRelinquish: true
+            })
+          })
+        }
+
+        dataSet = []          
+        await getData('all')   
+        table.replaceData(dataSet)
+        console.log('Done enabling: ', i, ' registers.')
+        $('#loading').hide();
+      }
+
+      async function disableFunction(data) {
+        var i = 0
+        $('#loading').show();
+        for (i = 0; i < data.length; i++) {            
+          const element = data[i];
+          if(element.username != currentUser){
+            console.log('Disabled: ', element.id, '. Total: ', i)
+            await fetch(`${url}/api/v1/users.setActiveStatus`, {
+              method: 'post',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Auth-Token': authToken,
+                'X-User-Id': userId
+              },
+              body: JSON.stringify({
+                userId: element.id,
+                activeStatus : false,
+                confirmRelinquish: true
+              })
+            })
+          }
+        }
+
+        dataSet = []          
+        await getData('all')   
+        table.replaceData(dataSet)
+        console.log('Done disabling: ', i, ' registers.')
+        $('#loading').hide();
+
+      }
+
+
+
+    }
+      
+    </script>
+  </body>
+</html>
