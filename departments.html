@@ -184,7 +184,8 @@
     var dataSet = []
 
 
-    async function getDepartments(status){      
+    async function getDepartments(status){   
+      $('#loading').show();   
       let response = await fetch(`${url}/api/v1/livechat/department`, {
         method: 'get',
         headers: {
@@ -205,7 +206,8 @@
             dataSet.push({id: element._id, enabled: element.enabled, name: element.name, email: element.email, _updatedAt: element._updatedAt, showOnRegistration: element.showOnRegistration, showOnOfflineForm: element.showOnOfflineForm})
           }
         });
-      }      
+      }    
+      $('#loading').hide();  
     }
     
     createNewTable()

@@ -91,6 +91,14 @@
         login(loginForm.serverUrl.value, loginForm.username.value, loginForm.password.value)
     })
 
+    checkConfig()
+    function checkConfig(){
+      configs = JSON.parse(localStorage.getItem('configs'))
+
+      if(configs.authToken){
+        window.location.href = "/tools"
+      }
+    }
 
 
     async function login(url, username, password){   

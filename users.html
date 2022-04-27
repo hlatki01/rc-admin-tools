@@ -189,7 +189,8 @@
     var dataSet = []
 
 
-    async function getData(status){      
+    async function getData(status){     
+      $('#loading').show(); 
       let response = await fetch(`${url}/api/v1/users.list`, {
         method: 'get',
         headers: {
@@ -252,11 +253,9 @@
 
           
         }
-
-        data.users.forEach(element => {
-
-        });
-      }      
+      }  
+      $('#loading').hide();
+    
     }
     
     createNewTable()
