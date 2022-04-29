@@ -36,6 +36,10 @@ app.get('/users', (req, res) => {
     res.render(__dirname + '/users')
 });
 
+app.get('/livechat-rooms', (req, res) => {
+    res.render(__dirname + '/livechat-rooms')
+});
+
 
 app.listen(port, () => {
 	console.log(`Example app listening at http://localhost:${port}`)
