@@ -61,22 +61,36 @@
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
 
       <label for="serverUrl"  class="sr-only">Server Address</label>
-      <input type="text" class="form-control" id="serverUrl" placeholder="Enter the server Url" name="serverUrl" value="<%= server %>">
+      <input type="text" class="form-control" id="serverUrl" placeholder="Enter the server Url" name="serverUrl" required>
 
       <label for="username" class="sr-only">Username</label>
-      <input type="text" id="username" name="username" class="form-control" placeholder="Username" autofocus required  value="<%= username %>">
+      <input type="text" id="username" name="username" class="form-control" placeholder="Username" autofocus required>
 
       <label for="inputPassword" class="sr-only">Password</label>
       <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
       
       <div class="checkbox mb-3" id="error">        
       </div>
+
+      <div style="text-align: center; padding: 15px;">
+        Having troubles with CORS? Check out the readme <a href="https://github.com/hlatki01/rc-admin-tools" target="_blank" style="font-weight: bold;">here</a>.
+      </div>
       <button class="btn btn-lg btn-primary btn-block" type="submit" id="login-form-submit">Sign in</button>
+      <div class="icons" style="padding: 15px;">
+        <a href="https://github.com/hlatki01/rc-admin-tools" target="_blank"><i class="fa-brands fa-github" style="padding: 5px; color: black;"></i></a>
+        <a href="https://open.rocket.chat/direct/luis.hlatki" target="_blank"><i class="fa-brands fa-rocketchat" style="padding: 5px; color: red;"></i></a>
+
+      </div>
+
     </form>
+
+    
+
     
   </body>
 
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/3f0213fd83.js" crossorigin="anonymous"></script>
 
 
   <script>
@@ -95,7 +109,7 @@
     function checkConfig(){
       configs = JSON.parse(localStorage.getItem('configs'))
 
-      if(configs.authToken){
+      if(configs){
         window.location.href = "/tools"
       }
     }
@@ -116,6 +130,8 @@
         })
       })
       let data = await response.json()
+
+      console.log(data)
       let error = ''
 
 
