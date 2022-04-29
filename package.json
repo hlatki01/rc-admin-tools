@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --watch index.js"
+    "start": "nodemon --watch index.js",
+    "server": "node index.js"
   },
   "author": "Luis Hlatki",
   "license": "ISC",

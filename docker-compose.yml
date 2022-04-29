@@ -3,7 +3,7 @@ version: '2'
 services:
   rc-admin-tools:
     build: .
-    command: npm start
+    command: npm run server
     container_name: rc-admin-tools
     restart: unless-stopped
     volumes:
