@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  rc-admin-tools:
+    build: .
+    command: npm start
+    container_name: rc-admin-tools
+    restart: unless-stopped
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    ports:
+      - "5000:5000"
