@@ -161,9 +161,8 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
 
-
-
-
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/assets/js/libs.js"></script>
   <script>
 
     let configs = ''
@@ -219,9 +218,6 @@
           else {
             isOpen = false
           }
-
-          console.log(isOpen);
-
 
 
           if (!data.rooms[i].servedBy) {
@@ -393,6 +389,7 @@
         await getData('all')
         table.replaceData(dataSet)
         console.log('Done Deleting: ', i, ' registers.')
+        sendNotification('Success!', `Done deleting the closed registers!`, 'success')
         $('#loading').hide();
       }
 
@@ -412,10 +409,13 @@
         })
         let result = await response.json()
 
+        console.log(result);
+
         dataSet = []
         await getData('all')
         table.replaceData(dataSet)
         console.log('Done Deleting: ', i, ' registers.')
+        sendNotification('Success!', `Done deleting ${i} registers!`, 'success')
         $('#loading').hide();
       }
 
@@ -448,6 +448,7 @@
         await getData('all')
         table.replaceData(dataSet)
         console.log('Done disabling: ', i, ' registers.')
+        sendNotification('Success!', `Done disabling ${i} registers!`, 'success')
         $('#loading').hide();
 
       }

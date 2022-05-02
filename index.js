@@ -40,6 +40,10 @@ app.get('/livechat-rooms', (req, res) => {
     res.render(__dirname + '/livechat-rooms')
 });
 
+app.get('/channels', (req, res) => {
+    res.render(__dirname + '/channels')
+});
+
 
 app.listen(port, () => {
 	console.log(`Example app listening at http://localhost:${port}`)

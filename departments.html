@@ -160,6 +160,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
 
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/assets/js/libs.js"></script>
 
 
   <script>
@@ -357,6 +359,7 @@
         await getDepartments('all')
         table.replaceData(dataSet)
         console.log('Done Deleting: ', i, ' registers.')
+        sendNotification('Success!', `Done deleting ${i} registers!`, 'success')
         $('#loading').hide();
       }
 
@@ -389,6 +392,7 @@
         dataSet = []
         await getDepartments('all')
         table.replaceData(dataSet)
+        sendNotification('Success!', `Done enabling ${i} registers!`, 'success')
         console.log('Done enabling: ', i, ' registers.')
         $('#loading').hide();
       }
@@ -422,6 +426,7 @@
         dataSet = []
         await getDepartments('all')
         table.replaceData(dataSet)
+        sendNotification('Success!', `Done disabling ${i} registers!`, 'success')
         console.log('Done disabling: ', i, ' registers.')
         $('#loading').hide();
 
