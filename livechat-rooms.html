@@ -272,6 +272,17 @@
           { title: "lastMessage", field: "lastMessage" },
           { title: "token", field: "token" }
         ],
+        footerElement: '<span class="tabulator-counter float-left">' +
+          'Showing <span id="search_count"></span> results out of <span id="total_count"></span> ' +
+          '</span>',
+      });
+
+      table.on("dataLoaded", function (data) {
+        $("#total_count").text(data.length);
+      });
+
+      table.on("dataFiltered", function (filters, rows) {
+        $("#search_count").text(rows.length);
       });
 
       document.getElementById("download-csv").addEventListener("click", function () {
