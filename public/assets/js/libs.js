@@ -1,4 +1,3 @@
-
 async function sendNotification(title, text, icon) {
     Swal.fire({
         title: title,
@@ -17,5 +16,17 @@ async function sendInformation(text, icon){
     showConfirmButton: false,
     timer: 1300,
     toast: true
+  })
+}
+
+async function sendConfirmation(text, icon){
+  return Swal.fire({
+    title: text,
+    showDenyButton: true,
+    showCancelButton: true,
+    confirmButtonText: 'Yes',
+    denyButtonText: 'No',
+  }).then((result) => {
+    return result
   })
 }

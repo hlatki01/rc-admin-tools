@@ -339,23 +339,46 @@
 
 
       //trigger download of data.html file
-      document.getElementById("download-html").addEventListener("click", function () {
+      document.getElementById("download-html").addEventListener("click", async function () {
         table.download("html", "data.html", { style: true });
       });
-      document.getElementById("disable-rows").addEventListener("click", function () {
+      document.getElementById("disable-rows").addEventListener("click", async function () {
         var selectedRows = table.getSelectedData(); //get array of currently selected row components.
-        disableFunction(selectedRows)
+
+        let btn = await sendConfirmation(`Do you want to really want to delete these ${selectedRows.length} registers?`)
+        if (btn.isConfirmed) {
+          await disableFunction(selectedRows)
+
+        } else if (btn.isDenied) {
+          Swal.fire('Nothing was changed', '', 'info')
+        }
+
+
       })
 
-      document.getElementById("enable-rows").addEventListener("click", function () {
+      document.getElementById("enable-rows").addEventListener("click", async function () {
         var selectedRows = table.getSelectedData(); //get array of currently selected row components.
-        enableFunction(selectedRows)
+
+        let btn = await sendConfirmation(`Do you want to really want to delete these ${selectedRows.length} registers?`)
+        if (btn.isConfirmed) {
+          await enableFunction(selectedRows)
+        } else if (btn.isDenied) {
+          Swal.fire('Nothing was changed', '', 'info')
+        }
+
 
       })
 
-      document.getElementById("delete-rows").addEventListener("click", function () {
+      document.getElementById("delete-rows").addEventListener("click", async function () {
         var selectedRows = table.getSelectedData(); //get array of currently selected row components.
-        deleteFunction(selectedRows)
+        let btn = await sendConfirmation(`Do you want to really want to delete these ${selectedRows.length} registers?`)
+        if (btn.isConfirmed) {
+          await deleteFunction(selectedRows)
+
+        } else if (btn.isDenied) {
+          Swal.fire('Nothing was changed', '', 'info')
+        }
+
 
       })
 
@@ -390,9 +413,19 @@
         await getData(isChecked, 'archived')
         table.replaceData(dataSet)
         var disabledRows = table.getData();
-        deleteFunction(disabledRows)
-        await getData(isChecked, 'all')
-        table.replaceData(dataSet)
+
+        let btn = await sendConfirmation(`Do you want to really want to delete these ${disabledRows.length} registers?`)
+        if (btn.isConfirmed) {
+          await deleteFunction(disabledRows)
+          dataSet = []
+
+          await getData(isChecked, 'all')
+          table.replaceData(dataSet)
+
+        } else if (btn.isDenied) {
+          Swal.fire('Nothing was changed', '', 'info')
+        }
+
 
       })
 
@@ -416,8 +449,9 @@
           })
 
           let result = await response.json()
+
           error = result.success
-          if(result.success === false){
+          if (result.success === false) {
             sendNotification('Error!', `${result.error}`, 'error')
           }
         }
@@ -426,7 +460,7 @@
         await getData(isChecked, 'all')
         table.replaceData(dataSet)
 
-        if(error){
+        if (error) {
           sendNotification('Success!', `Done deleting ${i} registers!`, 'success')
         }
         console.log('Done Deleting: ', i, ' registers.')
@@ -480,10 +514,10 @@
             })
           })
 
-          
+
           let result = await response.json()
           error = result.success
-          if(result.success === false){
+          if (result.success === false) {
             sendNotification('Error!', `${result.error}`, 'error')
           }
 
@@ -492,7 +526,7 @@
         dataSet = []
         await getData(isChecked, 'all')
         table.replaceData(dataSet)
-        if(error){
+        if (error) {
           sendNotification('Success!', `Done archiving ${i} registers!`, 'success')
         }
         console.log('Done archiving: ', i, ' registers.')

@@ -432,25 +432,47 @@
           sendNotification('Error!', 'You must select a channel.', 'error')
         }
         else {
-          joinToChannelFunction(selectedRows, channel)
+          let btn = await sendConfirmation(`Do you want to really want to modify these ${selectedRows.length} registers?`)
+          if (btn.isConfirmed) {
+            await joinToChannelFunction(selectedRows, channel)
+          } else if (btn.isDenied) {
+            Swal.fire('Nothing was changed', '', 'info')
+          }
         }
 
       })
 
-      document.getElementById("disable-rows").addEventListener("click", function () {
+      document.getElementById("disable-rows").addEventListener("click", async function () {
         var selectedRows = table.getSelectedData(); //get array of currently selected row components.
-        disableFunction(selectedRows)
+        let btn = await sendConfirmation(`Do you want to really want to disable these ${selectedRows.length} registers?`)
+        if (btn.isConfirmed) {
+          await disableFunction(selectedRows)
+        } else if (btn.isDenied) {
+          Swal.fire('Nothing was changed', '', 'info')
+        }
       })
 
-      document.getElementById("enable-rows").addEventListener("click", function () {
+      document.getElementById("enable-rows").addEventListener("click", async function () {
         var selectedRows = table.getSelectedData(); //get array of currently selected row components.
-        enableFunction(selectedRows)
+
+        let btn = await sendConfirmation(`Do you want to really want to enable these ${selectedRows.length} registers?`)
+        if (btn.isConfirmed) {
+          await enableFunction(selectedRows)
+        } else if (btn.isDenied) {
+          Swal.fire('Nothing was changed', '', 'info')
+        }
+
 
       })
 
-      document.getElementById("delete-rows").addEventListener("click", function () {
+      document.getElementById("delete-rows").addEventListener("click", async function () {
         var selectedRows = table.getSelectedData(); //get array of currently selected row components.
-        deleteFunction(selectedRows)
+        let btn = await sendConfirmation(`Do you want to really want to delete these ${selectedRows.length} registers?`)
+        if (btn.isConfirmed) {
+          await deleteFunction(selectedRows)
+        } else if (btn.isDenied) {
+          Swal.fire('Nothing was changed', '', 'info')
+        }
 
       })
 
@@ -478,9 +500,16 @@
         await getData('disabled')
         table.replaceData(dataSet)
         var disabledRows = table.getData();
-        deleteFunction(disabledRows)
-        await getData('all')
-        table.replaceData(dataSet)
+
+        let btn = await sendConfirmation(`Do you want to really want to delete these ${disabledRows.length} registers?`)
+        if (btn.isConfirmed) {
+          await deleteFunction(disabledRows)
+          await getData('all')
+          table.replaceData(dataSet)
+
+        } else if (btn.isDenied) {
+          Swal.fire('Nothing was changed', '', 'info')
+        }
 
       })
 
@@ -514,11 +543,13 @@
 
       async function deleteFunction(data) {
         var i = 0
+        let error = false
+
         $('#loading').show();
         for (i = 0; i < data.length; i++) {
           const element = data[i];
           console.log('Deleted: ', element.id, '. Total: ', i)
-          await fetch(`${url}/api/v1/users.delete`, {
+          let response = await fetch(`${url}/api/v1/users.delete`, {
             method: 'post',
             headers: {
               'Content-Type': 'application/json',
@@ -530,12 +561,27 @@
               confirmRelinquish: true
             })
           })
+
+          let result = await response.json()
+          console.log(result);
+
+          error = result.success
+          if (result.success === false) {
+            await sendNotification('Error!', `${result.error}`, 'error')
+          }
+
         }
 
         dataSet = []
-        await getData('all')
+        
+        setTimeout(async function(){
+          await getData('all')
+        }, 2000); // prints "zero,one,two" after 2 seconds
+
         table.replaceData(dataSet)
-        sendNotification('Success!', `Done deleting ${i} registers!`, 'success')
+        if (error) {
+          await sendNotification('Success!', `Done deleting ${i} registers!`, 'success')
+        }
         console.log('Done Deleting: ', i, ' registers.')
 
         $('#loading').hide();

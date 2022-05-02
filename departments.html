@@ -246,7 +246,7 @@
               cell.getRow().toggleSelect();
             }
           },
-          { title: "id", field: "id"},
+          { title: "id", field: "id" },
           { title: "enabled", field: "enabled" },
           { title: "showOnRegistration", field: "showOnRegistration" },
           { title: "showOnOfflineForm", field: "showOnOfflineForm" },
@@ -294,20 +294,41 @@
       document.getElementById("download-html").addEventListener("click", function () {
         table.download("html", "data.html", { style: true });
       });
-      document.getElementById("disable-rows").addEventListener("click", function () {
+
+      document.getElementById("disable-rows").addEventListener("click", async function () {
         var selectedRows = table.getSelectedData(); //get array of currently selected row components.
-        disableFunction(selectedRows)
+        let btn = await sendConfirmation(`Do you want to really want to modify these ${selectedRows.length} registers?`)
+        if (btn.isConfirmed) {
+          await disableFunction(selectedRows)
+        } else if (btn.isDenied) {
+          Swal.fire('Nothing was changed', '', 'info')
+        }
+
       })
 
-      document.getElementById("enable-rows").addEventListener("click", function () {
+      document.getElementById("enable-rows").addEventListener("click", async function () {
         var selectedRows = table.getSelectedData(); //get array of currently selected row components.
-        enableFunction(selectedRows)
+        let btn = await sendConfirmation(`Do you want to really want to modify these ${selectedRows.length} registers?`)
+        if (btn.isConfirmed) {
+          await enableFunction(selectedRows)
+        } else if (btn.isDenied) {
+          Swal.fire('Nothing was changed', '', 'info')
+        }
+
+
 
       })
 
-      document.getElementById("delete-rows").addEventListener("click", function () {
+      document.getElementById("delete-rows").addEventListener("click", async function () {
         var selectedRows = table.getSelectedData(); //get array of currently selected row components.
-        deleteFunction(selectedRows)
+
+        let btn = await sendConfirmation(`Do you want to really want to modify these ${selectedRows.length} registers?`)
+        if (btn.isConfirmed) {
+          await deleteFunction(selectedRows)
+        } else if (btn.isDenied) {
+          Swal.fire('Nothing was changed', '', 'info')
+        }
+
 
       })
 
@@ -335,9 +356,18 @@
         await getDepartments('disabled')
         table.replaceData(dataSet)
         var disabledRows = table.getData();
-        deleteFunction(disabledRows)
-        await getDepartments('all')
-        table.replaceData(dataSet)
+
+        let btn = await sendConfirmation(`Do you want to really want to delete these ${disabledRows.length} registers?`)
+        if (btn.isConfirmed) {
+          await deleteFunction(disabledRows)
+          dataSet = []
+          await getDepartments('all')
+          table.replaceData(dataSet)
+
+        } else if (btn.isDenied) {
+          Swal.fire('Nothing was changed', '', 'info')
+        }
+
 
       })
 
