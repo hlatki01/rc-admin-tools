@@ -41,6 +41,10 @@
       right: 0;
       bottom: 0;
     }
+
+    .position-absolute {
+      position: absolute;
+    }
   </style>
 </head>
 
@@ -237,19 +241,19 @@
       await getChannels(isChecked)
       console.log(isChecked);
     })
-    
+
     async function getChannels(type) {
 
       let types = ''
 
-      if(type === true){
+      if (type === true) {
         types = `types[]=c&types[]=p`
       }
-      else{
+      else {
         types = `types[]=c`
       }
 
-      
+
       $('#loading').show();
       let response = await fetch(`${url}/api/v1/rooms.adminRooms?${types}`, {
         method: 'get',
@@ -341,6 +345,8 @@
 
         }
       }
+      sendInformation(`Fetched ${dataSet.length} registers :)`, 'success')
+
       $('#loading').hide();
 
     }
@@ -489,8 +495,8 @@
               'X-User-Id': userId
             },
             body: JSON.stringify({
-                "message": `{\"msg\":\"method\",\"id\":\"113\",\"method\":\"addUsersToRoom\",\"params\":[{\"rid\":\"${channel}\",\"users\":[\"${element.username}\"]}]}`
-              })
+              "message": `{\"msg\":\"method\",\"id\":\"113\",\"method\":\"addUsersToRoom\",\"params\":[{\"rid\":\"${channel}\",\"users\":[\"${element.username}\"]}]}`
+            })
           })
           console.log('Joined: ', element.id, ' to the channel: ', channel, ' .Total: ', i)
         }

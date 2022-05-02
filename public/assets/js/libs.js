@@ -8,3 +8,14 @@ async function sendNotification(title, text, icon) {
       })
 
 }
+
+async function sendInformation(text, icon){
+  Swal.fire({
+    position: 'top-end',
+    icon: icon,
+    title: text,
+    showConfirmButton: false,
+    timer: 1300,
+    toast: true
+  })
+}
