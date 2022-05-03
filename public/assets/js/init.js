@@ -4,8 +4,12 @@ checkConfig()
 function checkConfig() {
   configs = JSON.parse(localStorage.getItem('configs'))
 
-  if (!configs.authToken) {
-    window.location.href = "/"
+  if (!configs) {
+    sendInformation(`You need to login to perform actions!`, "error");
+
+    setTimeout( function() {
+      window.location.href = "/"
+    }, 1200);
   }
   else {
     $('#serverUrl').text(configs.serverUrl)

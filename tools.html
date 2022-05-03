@@ -180,29 +180,12 @@
   <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>
   <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/holder.min.js"></script>
 
-  <script>
-    let configs = ''
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  <script src="/assets/js/libs.js"></script>
+  <script src="/assets/js/init.js"></script>
 
-    checkConfig()
-    function checkConfig() {
-      configs = JSON.parse(localStorage.getItem('configs'))
 
-      if (!configs) {
-        window.location.href = "/"
-      }
-      else {
-        $('#serverUrl').text(configs.serverUrl)
-        $('#username').text(configs.username)
-
-      }
-    }
-
-    function destroySession() {
-      localStorage.clear()
-      window.location.href = "/"
-    }
-
-  </script>
 </body>
 
 </html>

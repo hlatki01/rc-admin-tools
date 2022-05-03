@@ -98,36 +98,40 @@
         <div class="row">
           <div class="col-md-12" style="text-align: center;">
 
-            <h5 style="margin: 15px;">Actions</h5>
-            <div class="btn-group" role="group" aria-label="Basic example" style="margin-bottom: 15px;">
-              <button id="disable-rows" class="btn btn-primary">Archive Selected</button>
-              <button id="enable-rows" class="btn btn-primary">Unarchive Selected</button>
-              <button id="delete-rows" class="btn btn-primary">Delete Selected</button>
-              <button id="delete-disabled-rows" class="btn btn-primary">Delete Archived Rows</button>
-              <button id="show-disabled" class="btn btn-primary">Show Archived</button>
-              <button id="show-enabled" class="btn btn-primary">Show Unarchived</button>
-              <button id="show-all" class="btn btn-success">Show All</button>
-
-            </div>
-
             <div class="col-md-12">
-              <div class="form-check" style="padding: 10px;">
-                <input class="form-check-input" type="checkbox" value="" id="privateChannels">
-                <label class="form-check-label" for="privateChannels">
-                  Fetch all private channels
-                </label>
+              <h5 style="margin: 15px;">Actions</h5>
+              <div class="btn-group" role="group" aria-label="Basic example" style="margin-bottom: 15px;">
+                <button id="disable-rows" class="btn btn-primary">Archive Selected</button>
+                <button id="enable-rows" class="btn btn-primary">Unarchive Selected</button>
+                <button id="delete-rows" class="btn btn-primary">Delete Selected</button>
+                <button id="delete-disabled-rows" class="btn btn-primary">Delete Archived Rows</button>
+                <button id="show-disabled" class="btn btn-primary">Show Archived</button>
+                <button id="show-enabled" class="btn btn-primary">Show Unarchived</button>
+                <button id="show-all" class="btn btn-success">Show All</button>
+
+              </div>
+
+              <div class="col-md-12">
+                <div class="form-check" style="padding: 10px;">
+                  <input class="form-check-input" type="checkbox" value="" id="privateChannels">
+                  <label class="form-check-label" for="privateChannels">
+                    Fetch all private channels
+                  </label>
+                </div>
               </div>
             </div>
-
-
-            <div id="table"></div>
-            <h5 style="margin: 15px;">Export Actions</h5>
-            <div class="btn-group" role="group" aria-label="Basic example">
-              <button id="download-csv" class="btn btn-primary">Download CSV</button>
-              <button id="download-json" class="btn btn-primary">Download JSON</button>
-              <button id="download-xlsx" class="btn btn-primary">Download XLSX</button>
-              <button id="download-pdf" class="btn btn-primary">Download PDF</button>
-              <button id="download-html" class="btn btn-primary">Download HTML</button>
+            <div class="col-md-12">
+              <div id="table"></div>
+            </div>
+            <div class="col-md-12">
+              <h5 style="margin: 15px;">Export Actions</h5>
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button id="download-csv" class="btn btn-primary">Download CSV</button>
+                <button id="download-json" class="btn btn-primary">Download JSON</button>
+                <button id="download-xlsx" class="btn btn-primary">Download XLSX</button>
+                <button id="download-pdf" class="btn btn-primary">Download PDF</button>
+                <button id="download-html" class="btn btn-primary">Download HTML</button>
+              </div>
             </div>
 
           </div>
@@ -157,12 +161,6 @@
   <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>
   <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/holder.min.js"></script>
 
-  <script type="text/javascript" charset="utf8"
-    src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-  <script type="text/javascript" charset="utf8"
-    src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
-  <script type="text/javascript" charset="utf8"
-    src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
 
   <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator_bootstrap5.css" rel="stylesheet">
   <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
@@ -177,368 +175,11 @@
 
 
   <script src="/assets/js/libs.js"></script>
+  <script src="/assets/js/init.js"></script>
+  <script src="/assets/js/channels.js"></script>
 
 
 
-
-
-  <script>
-
-    let configs = ''
-    let isChecked = false
-
-
-    checkConfig()
-    function checkConfig() {
-      configs = JSON.parse(localStorage.getItem('configs'))
-
-      if (!configs.authToken) {
-        window.location.href = "/"
-      }
-      else {
-        $('#serverUrl').text(configs.serverUrl)
-        $('#username').text(configs.username)
-
-      }
-    }
-
-    function destroySession() {
-      localStorage.clear()
-      window.location.href = "/"
-    }
-
-    const url = configs.serverUrl;
-    const authToken = configs.authToken;
-    const userId = configs.userId;
-    const currentUser = configs.username;
-
-    var dataSet = []
-
-
-
-    async function getData(allTypes, archivedStatus) {
-      let types = ''
-
-      if (allTypes === true) {
-        types = `types[]=c&types[]=p`
-      }
-      else {
-        types = `types[]=c`
-      }
-
-
-      $('#loading').show();
-      let response = await fetch(`${url}/api/v1/rooms.adminRooms?${types}`, {
-        method: 'get',
-        headers: {
-          'X-Auth-Token': authToken,
-          'X-User-Id': userId
-        }
-      })
-      let data = await response.json()
-      if (data.rooms.length > 0) {
-        for (let i = 0; i < data.rooms.length; i++) {
-          const element = data.rooms[i];
-          if (element.u) {
-            roomOwner = element.u.username
-          }
-          else {
-            roomOwner = 'undefined'
-          }
-
-          if (element.archived) {
-            archived = true
-          }
-          else {
-            archived = false
-          }
-
-          console.log(archived);
-
-
-          if (archivedStatus === 'archived' && element.archived) {
-            dataSet.push({ id: element._id, fname: element.fname, owner: roomOwner, archived: archived, usersCount: element.usersCount })
-          }
-
-          if (archivedStatus === 'unarchived' && !element.archived) {
-            dataSet.push({ id: element._id, fname: element.fname, owner: roomOwner, archived: archived, usersCount: element.usersCount })
-          }
-
-          if (archivedStatus === 'all') {
-            dataSet.push({ id: element._id, fname: element.fname, owner: roomOwner, archived: archived, usersCount: element.usersCount })
-          }
-
-        }
-      }
-      $('#loading').hide();
-
-      sendInformation(`Fetched ${dataSet.length} registers :)`, 'success')
-
-
-    }
-
-    createNewTable()
-
-
-    async function createNewTable() {
-      await getData(isChecked, 'all')
-      var table = new Tabulator("#table", {
-        height: 500, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
-        data: dataSet, //assign data to table
-        layout: "fitColumns", //fit columns to width of table (optional)
-        pagination: "local",
-        paginationSize: 50,
-        paginationSizeSelector: [25, 50, 100, 500, 1000, 2000],
-        columns: [ //Define Table Columns
-          {
-            formatter: "rowSelection", titleFormatter: "rowSelection", hozAlign: "center", headerSort: false, cellClick: function (e, cell) {
-              cell.getRow().toggleSelect();
-            }
-          },
-          { title: "id", field: "id" },
-          { title: "fname", field: "fname", headerFilter: "input" },
-          { title: "owner", field: "owner", headerFilter: "input" },
-          { title: "archived", field: "archived" },
-          { title: "usersCount", field: "usersCount" }
-        ],
-        footerElement: '<span class="tabulator-counter float-left">' +
-          'Showing <span id="search_count"></span> results out of <span id="total_count"></span> ' +
-          '</span>',
-      });
-
-      table.on("dataLoaded", function (data) {
-        $("#total_count").text(data.length);
-      });
-
-      table.on("dataFiltered", function (filters, rows) {
-        $("#search_count").text(rows.length);
-      });
-
-      document.getElementById("download-csv").addEventListener("click", function () {
-        table.download("csv", "data.csv");
-      });
-
-      //trigger download of data.json file
-      document.getElementById("download-json").addEventListener("click", function () {
-        table.download("json", "data.json");
-      });
-
-      //trigger download of data.xlsx file
-      document.getElementById("download-xlsx").addEventListener("click", function () {
-        table.download("xlsx", "data.xlsx", { sheetName: "My Data" });
-      });
-
-      //trigger download of data.pdf file
-      document.getElementById("download-pdf").addEventListener("click", function () {
-        table.download("pdf", "data.pdf", {
-          orientation: "portrait", //set page orientation to portrait
-          title: "Example Report", //add title to report
-        });
-      });
-
-
-
-      //trigger download of data.html file
-      document.getElementById("download-html").addEventListener("click", async function () {
-        table.download("html", "data.html", { style: true });
-      });
-      document.getElementById("disable-rows").addEventListener("click", async function () {
-        var selectedRows = table.getSelectedData(); //get array of currently selected row components.
-
-        let btn = await sendConfirmation(`Do you want to really want to delete these ${selectedRows.length} registers?`)
-        if (btn.isConfirmed) {
-          await disableFunction(selectedRows)
-
-        } else if (btn.isDenied) {
-          Swal.fire('Nothing was changed', '', 'info')
-        }
-
-
-      })
-
-      document.getElementById("enable-rows").addEventListener("click", async function () {
-        var selectedRows = table.getSelectedData(); //get array of currently selected row components.
-
-        let btn = await sendConfirmation(`Do you want to really want to delete these ${selectedRows.length} registers?`)
-        if (btn.isConfirmed) {
-          await enableFunction(selectedRows)
-        } else if (btn.isDenied) {
-          Swal.fire('Nothing was changed', '', 'info')
-        }
-
-
-      })
-
-      document.getElementById("delete-rows").addEventListener("click", async function () {
-        var selectedRows = table.getSelectedData(); //get array of currently selected row components.
-        let btn = await sendConfirmation(`Do you want to really want to delete these ${selectedRows.length} registers?`)
-        if (btn.isConfirmed) {
-          await deleteFunction(selectedRows)
-
-        } else if (btn.isDenied) {
-          Swal.fire('Nothing was changed', '', 'info')
-        }
-
-
-      })
-
-      document.getElementById("privateChannels").addEventListener("click", async function () {
-        dataSet = []
-        isChecked = $('#privateChannels').is(":checked")
-        await getData(isChecked, 'all')
-        table.replaceData(dataSet)
-
-      })
-
-      document.getElementById("show-disabled").addEventListener("click", async function () {
-        dataSet = []
-        await getData(isChecked, 'archived')
-        table.replaceData(dataSet)
-      })
-
-      document.getElementById("show-enabled").addEventListener("click", async function () {
-        dataSet = []
-        await getData(isChecked, 'unarchived')
-        table.replaceData(dataSet)
-      })
-
-      document.getElementById("show-all").addEventListener("click", async function () {
-        dataSet = []
-        await getData(isChecked, 'all')
-        table.replaceData(dataSet)
-      })
-
-      document.getElementById("delete-disabled-rows").addEventListener("click", async function () {
-        dataSet = []
-        await getData(isChecked, 'archived')
-        table.replaceData(dataSet)
-        var disabledRows = table.getData();
-
-        let btn = await sendConfirmation(`Do you want to really want to delete these ${disabledRows.length} registers?`)
-        if (btn.isConfirmed) {
-          await deleteFunction(disabledRows)
-          dataSet = []
-
-          await getData(isChecked, 'all')
-          table.replaceData(dataSet)
-
-        } else if (btn.isDenied) {
-          Swal.fire('Nothing was changed', '', 'info')
-        }
-
-
-      })
-
-      async function deleteFunction(data) {
-        var i = 0
-        let error = false
-        $('#loading').show();
-        for (i = 0; i < data.length; i++) {
-          const element = data[i];
-          console.log('Deleted: ', element.id, '. Total: ', i)
-          let response = await fetch(`${url}/api/v1/channels.delete`, {
-            method: 'post',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Auth-Token': authToken,
-              'X-User-Id': userId
-            },
-            body: JSON.stringify({
-              roomId: element.id
-            })
-          })
-
-          let result = await response.json()
-
-          error = result.success
-          if (result.success === false) {
-            sendNotification('Error!', `${result.error}`, 'error')
-          }
-        }
-
-        dataSet = []
-        await getData(isChecked, 'all')
-        table.replaceData(dataSet)
-
-        if (error) {
-          sendNotification('Success!', `Done deleting ${i} registers!`, 'success')
-        }
-        console.log('Done Deleting: ', i, ' registers.')
-        $('#loading').hide();
-      }
-
-      async function enableFunction(data) {
-        var i = 0
-        $('#loading').show();
-        for (i = 0; i < data.length; i++) {
-          const element = data[i];
-          console.log('Enabled: ', element.id, '. Total: ', i)
-          await fetch(`${url}/api/v1/channels.unarchive`, {
-            method: 'post',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Auth-Token': authToken,
-              'X-User-Id': userId
-            },
-            body: JSON.stringify({
-              roomId: element.id
-            })
-          })
-        }
-
-        dataSet = []
-        await getData(isChecked, 'all')
-        table.replaceData(dataSet)
-        sendNotification('Success!', `Done enabling ${i} registers!`, 'success')
-        console.log('Done enabling: ', i, ' registers.')
-        $('#loading').hide();
-      }
-
-      async function disableFunction(data) {
-        var i = 0
-        let error = false
-
-        $('#loading').show();
-        for (i = 0; i < data.length; i++) {
-          const element = data[i];
-          console.log('Disabled: ', element.id, '. Total: ', i)
-          let response = await fetch(`${url}/api/v1/channels.archive`, {
-            method: 'post',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Auth-Token': authToken,
-              'X-User-Id': userId
-            },
-            body: JSON.stringify({
-              roomId: element.id
-            })
-          })
-
-
-          let result = await response.json()
-          error = result.success
-          if (result.success === false) {
-            sendNotification('Error!', `${result.error}`, 'error')
-          }
-
-        }
-
-        dataSet = []
-        await getData(isChecked, 'all')
-        table.replaceData(dataSet)
-        if (error) {
-          sendNotification('Success!', `Done archiving ${i} registers!`, 'success')
-        }
-        console.log('Done archiving: ', i, ' registers.')
-        $('#loading').hide();
-
-      }
-
-
-
-    }
-
-  </script>
 </body>
 
 </html>

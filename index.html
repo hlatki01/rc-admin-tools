@@ -1,183 +1,166 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="/assets/img/logo.png">
 
-    <title>Rocket.Chat Admin Tools</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="/assets/img/logo.png">
 
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
+  <title>Rocket.Chat Admin Tools</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
 
-    <!-- Custom styles for this template -->
-    <link href="https://getbootstrap.com/docs/4.0/examples/sign-in/signin.css" rel="stylesheet">
+  <!-- Bootstrap core CSS -->
+  <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <style>
-      input{
-        margin-top: 5px;
-      }
+  <!-- Custom styles for this template -->
+  <link href="https://getbootstrap.com/docs/4.0/examples/sign-in/signin.css" rel="stylesheet">
 
-      #loading {
-        position: fixed;
-        display: none;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        text-align: center;
-        opacity: 0.7;
-        background-color: #fff;
-        z-index: 99;
-      }
+</head>
 
-      #loading-image {
-        position: absolute;
-        margin: auto;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        }
-
-    </style>
-  </head>
-
-  <div id="loading">
-    <img id="loading-image" src="/assets/img/Rocket.gif" alt="Loading..." />
-  </div>
+<div id="loading">
+  <img id="loading-image" src="/assets/img/Rocket.gif" alt="Loading..." />
+</div>
 
 
-  <body class="text-center">
-    <form id="login-form" class="form-signin">
-      <img class="mb-4" src="/assets/img/logo.png" alt="" width="72" height="72">
+<body class="text-center">
+  <form id="login-form" class="form-signin">
+    <img class="mb-4" src="/assets/img/logo.png" alt="" width="72" height="72">
 
-      <h5 class="h5 mb-6 font-weight-small">Rocket.Chat Admin Tools</h5>
+    <h5 class="h5 mb-6 font-weight-small">Rocket.Chat Admin Tools</h5>
 
-      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
 
-      <label for="serverUrl"  class="sr-only">Server Address</label>
-      <input type="text" class="form-control" id="serverUrl" placeholder="Enter the server Url" name="serverUrl" required>
+    <label for="serverUrl" class="sr-only">Server Address</label>
+    <input type="text" class="form-control" id="serverUrl" placeholder="Enter the server Url" name="serverUrl" required>
 
-      <label for="username" class="sr-only">Username</label>
-      <input type="text" id="username" name="username" class="form-control" placeholder="Username" autofocus required>
+    <label for="username" class="sr-only">Username</label>
+    <input type="text" id="username" name="username" class="form-control" placeholder="Username" autofocus required>
 
-      <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
-      
-      <div class="checkbox mb-3" id="error">        
-      </div>
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
 
-      <div style="text-align: center; padding: 15px;">
-        Having troubles with CORS? Check out the readme <a href="https://github.com/hlatki01/rc-admin-tools" target="_blank" style="font-weight: bold;">here</a>.
-      </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit" id="login-form-submit">Sign in</button>
-      <div class="icons" style="padding: 15px;">
-        <a href="https://github.com/hlatki01/rc-admin-tools" target="_blank"><i class="fa-brands fa-github" style="padding: 5px; color: black;"></i></a>
-        <a href="https://open.rocket.chat/direct/luis.hlatki" target="_blank"><i class="fa-brands fa-rocketchat" style="padding: 5px; color: red;"></i></a>
+    <div class="checkbox mb-3" id="error">
+    </div>
 
-      </div>
+    <div style="text-align: center; padding: 15px;">
+      Having troubles with CORS? Check out the readme <a href="https://github.com/hlatki01/rc-admin-tools"
+        target="_blank" style="font-weight: bold;">here</a>.
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" id="login-form-submit">Sign in</button>
+    <div class="icons" style="padding: 15px;">
+      <a href="https://github.com/hlatki01/rc-admin-tools" target="_blank"><i class="fa-brands fa-github"
+          style="padding: 5px; color: black;"></i></a>
+      <a href="https://open.rocket.chat/direct/luis.hlatki" target="_blank"><i class="fa-brands fa-rocketchat"
+          style="padding: 5px; color: red;"></i></a>
 
-    </form>
+    </div>
 
-    
-
-    
-  </body>
-
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://kit.fontawesome.com/3f0213fd83.js" crossorigin="anonymous"></script>
+  </form>
 
 
-  <script>
-
-    const loginForm = document.getElementById("login-form");
-    const loginButton = document.getElementById("login-form-submit");
-    const loginErrorMsg = document.getElementById("login-error-msg");
 
 
-    loginButton.addEventListener("click", (e) => {
-        e.preventDefault();
-        login(loginForm.serverUrl.value, loginForm.username.value, loginForm.password.value)
+</body>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/3f0213fd83.js" crossorigin="anonymous"></script>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="/assets/js/init.js"></script>
+<script src="/assets/js/libs.js"></script>
+
+
+<script>
+
+  const loginForm = document.getElementById("login-form");
+  const loginButton = document.getElementById("login-form-submit");
+  const loginErrorMsg = document.getElementById("login-error-msg");
+
+  function isValidURL(string) {
+    var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    return (res !== null)
+  };
+
+
+  loginButton.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    if(isValidURL(loginForm.serverUrl.value)){
+      login(loginForm.serverUrl.value, loginForm.username.value, loginForm.password.value)
+    }
+    else{
+      sendInformation(`The URL doesn't seems to be a valid Rocket.Chat server`, "error");
+    }
+
+  })
+ 
+  checkConfig()
+  function checkConfig() {
+    configs = JSON.parse(localStorage.getItem('configs'))
+
+    if (configs) {
+      window.location.href = "/tools"
+    }
+  }
+
+
+  async function login(url, username, password) {
+    $('#loading').show();
+
+    let response = await fetch(`${url}/api/v1/login`, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user: username,
+        password: password
+
+      })
     })
+    let data = await response.json()
 
-    checkConfig()
-    function checkConfig(){
-      configs = JSON.parse(localStorage.getItem('configs'))
+    console.log(data)
+    let error = ''
 
-      if(configs){
+
+
+    if (data.status === 'success') {
+      $('#loading').hide();
+
+      let isAdmin = data.data.me.roles.includes("admin");
+      if (isAdmin) {
+        setConfigs(url, username, data.data.authToken, data.data.userId)
         window.location.href = "/tools"
       }
-    }
-
-
-    async function login(url, username, password){   
-      $('#loading').show();
-
-      let response = await fetch(`${url}/api/v1/login`, {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user: username,
-          password: password
-                   
-        })
-      })
-      let data = await response.json()
-
-      console.log(data)
-      let error = ''
-
-
-
-      if(data.status === 'success'){
-        $('#loading').hide();
-
-        let isAdmin = data.data.me.roles.includes("admin");
-        if(isAdmin){
-          setConfigs(url, username, data.data.authToken, data.data.userId)
-          window.location.href = "/tools"
-        }
-        else{
-          alertAction('You need to use an admin account in order to perform actions.')
-        }
-      }
-
-      if(data.status === 'error'){   
-        $('#loading').hide();
-     
-        alertAction(data.message)
+      else {
+        sendInformation(`You need to use an admin account in order to perform actions.`, "error");
       }
     }
 
-    function alertAction(message){
-      document.getElementById("error").insertAdjacentHTML("afterend", '<div id="error-message" class="alert alert-danger" role="alert">'+message+'</div>')
-      setTimeout(() => { 
-        let elem = document.getElementById("error-message");
-        elem.remove();
-       }, 3000);
+    if (data.status === 'error') {
+      $('#loading').hide();
+      sendInformation(`Error: ${data.message}`, "error");
+    }
+  }
+
+  function setConfigs(serverUrl, username, authToken, userId) {
+    const configs = {
+      serverUrl: serverUrl,
+      username: username,
+      authToken: authToken,
+      userId: userId
     }
 
-    function setConfigs(serverUrl, username, authToken, userId){
-      const configs = {
-        serverUrl: serverUrl,
-        username: username,
-        authToken: authToken,
-        userId: userId
-      }
+    localStorage.setItem('configs', JSON.stringify(configs));
 
-      localStorage.setItem('configs', JSON.stringify(configs));
+  }
 
-    }
-      
+</script>
 
-   
-
-  </script>
 </html>

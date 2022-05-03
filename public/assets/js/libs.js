@@ -14,7 +14,7 @@ async function sendInformation(text, icon){
     icon: icon,
     title: text,
     showConfirmButton: false,
-    timer: 1300,
+    timer: 2000,
     toast: true
   })
 }
