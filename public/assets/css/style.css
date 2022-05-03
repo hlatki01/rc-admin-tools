@@ -60,3 +60,50 @@ footer p {
 .right-gap {
   margin-right: auto;
 }
+
+#loading {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  text-align: center;
+  opacity: 0.7;
+  background-color: #fff;
+  z-index: 99;
+}
+
+#loading-image {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.user-status-online {
+  color: green;
+  font-weight: bold;
+}
+
+.user-status-busy {
+  color: red;
+  font-weight: bold;
+}
+
+.user-status-offline {
+  color: gray;
+  font-weight: bold;
+}
+
+.user-status-away {
+  color: orange;
+  font-weight: bold;
+}
+
+.tabulator-popup-container {
+  background: #fff;
+  padding: 20px 40px 20px 40px !important;
+}

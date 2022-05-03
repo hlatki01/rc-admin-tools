@@ -187,7 +187,7 @@
     function checkConfig() {
       configs = JSON.parse(localStorage.getItem('configs'))
 
-      if (!configs.authToken) {
+      if (!configs) {
         window.location.href = "/"
       }
       else {
