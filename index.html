@@ -71,6 +71,9 @@
 
 <script src="/assets/js/libs.js"></script>
 
+<script src="//cdnjs.cloudflare.com/ajax/libs/validate.js/0.13.1/validate.min.js"></script>
+
+
 
 
 
@@ -81,16 +84,23 @@
   const loginErrorMsg = document.getElementById("login-error-msg");
 
   function isValidURL(string) {
-    var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    var res = string.match(/(https?:\/\/(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9])(:?\d*)\/?([a-z_\/0-9\-#.]*)\??([a-z_\/0-9\-#=&]*)/g);
     return (res !== null)
   };
+
+
 
 
   loginButton.addEventListener("click", (e) => {
     e.preventDefault();
 
     if (isValidURL(loginForm.serverUrl.value)) {
-      login(loginForm.serverUrl.value, loginForm.username.value, loginForm.password.value)
+      if (!loginForm.username.value || !loginForm.password.value || !loginForm.serverUrl.value) {
+        sendInformation(`Error: User, Password and Server URL are required`, "error");
+      }else{
+        login(loginForm.serverUrl.value, loginForm.username.value, loginForm.password.value)
+      }
+
     }
     else {
       sendInformation(`The URL doesn't seems to be a valid Rocket.Chat server`, "error");
@@ -111,40 +121,45 @@
   async function login(url, username, password) {
     $('#loading').show();
 
-    let response = await fetch(`${url}/api/v1/login`, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        user: username,
-        password: password
+    try {
+      let response = await fetch(`${url}/api/v1/login`, {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user: username,
+          password: password
 
+        })
       })
-    })
-    let data = await response.json()
 
-    console.log(data)
-    let error = ''
+      let data = await response.json()
+      let error = ''
 
+      if (data.status === 'success') {
+        $('#loading').hide();
 
-
-    if (data.status === 'success') {
-      $('#loading').hide();
-
-      let isAdmin = data.data.me.roles.includes("admin");
-      if (isAdmin) {
-        setConfigs(url, username, data.data.authToken, data.data.userId)
-        window.location.href = "/tools"
+        let isAdmin = data.data.me.roles.includes("admin");
+        if (isAdmin) {
+          setConfigs(url, username, data.data.authToken, data.data.userId)
+          window.location.href = "/tools"
+        }
+        else {
+          sendInformation(`You need to use an admin account in order to perform actions.`, "error");
+        }
       }
-      else {
-        sendInformation(`You need to use an admin account in order to perform actions.`, "error");
-      }
-    }
 
-    if (data.status === 'error') {
+      if (data.status === 'error') {
+        console.log(data);
+        $('#loading').hide();
+        sendInformation(`Error: ${data.message}`, "error");
+      }
+
+
+    } catch (error) {
       $('#loading').hide();
-      sendInformation(`Error: ${data.message}`, "error");
+      sendInformation(`The URL doesn't seems to be a valid Rocket.Chat server`, "error");
     }
   }
 

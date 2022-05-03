@@ -16,6 +16,6 @@
     "express": "^4.17.2",
     "json2csv": "^5.0.6",
     "moment": "^2.29.1",
-    "node-localstorage": "^2.2.1"
+    "normalize-url": "^7.0.3"
   }
 }
