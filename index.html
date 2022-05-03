@@ -10,13 +10,11 @@
 
   <title>Rocket.Chat Admin Tools</title>
 
-  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
-
   <!-- Bootstrap core CSS -->
   <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- Custom styles for this template -->
-  <link href="https://getbootstrap.com/docs/4.0/examples/sign-in/signin.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/login.css">
 
 </head>
 
@@ -71,8 +69,9 @@
 
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script src="/assets/js/init.js"></script>
 <script src="/assets/js/libs.js"></script>
+
+
 
 
 <script>
@@ -90,15 +89,15 @@
   loginButton.addEventListener("click", (e) => {
     e.preventDefault();
 
-    if(isValidURL(loginForm.serverUrl.value)){
+    if (isValidURL(loginForm.serverUrl.value)) {
       login(loginForm.serverUrl.value, loginForm.username.value, loginForm.password.value)
     }
-    else{
+    else {
       sendInformation(`The URL doesn't seems to be a valid Rocket.Chat server`, "error");
     }
 
   })
- 
+
   checkConfig()
   function checkConfig() {
     configs = JSON.parse(localStorage.getItem('configs'))
