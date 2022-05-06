@@ -41,21 +41,7 @@ async function getData(status) {
 
       let visitorData = [];
 
-      if (element.v) {
-        let { visitor } = await getVisitorData(element.v.token);
-
-
-        if (visitor.livechatData) {
-          for (let i = 0; i < Object.keys(visitor.livechatData).length; i++) {
-            const element = Object.values(visitor.livechatData)[i];
-
-            let key = Object.keys(visitor.livechatData)[i];
-            let value = Object.values(visitor.livechatData)[i];
-            visitorData.push( {customField: {key: key, value: value}} )
-          }
-        }
-      }
-
+     
       if (!data.rooms[i].servedBy) {
         agentName = "undefined";
       } else {
@@ -70,8 +56,7 @@ async function getData(status) {
           guestname: element.fname,
           servedBy: agentName,
           lastMessage: moment(element.lm).format("DD/MM/YYYY - HH:mm:ss"),
-          token: element.v.token,
-          visitorData: visitorData,
+          token: element.v.token
         });
       }
       if (status === "open" && isOpen === true) {
@@ -82,8 +67,7 @@ async function getData(status) {
           guestname: element.fname,
           servedBy: agentName,
           lastMessage: moment(element.lm).format("DD/MM/YYYY - HH:mm:ss"),
-          token: element.v.token,
-          visitorData: visitorData,
+          token: element.v.token
         });
       }
       if (status === "closed" && isOpen === false) {
@@ -94,8 +78,7 @@ async function getData(status) {
           guestname: element.fname,
           servedBy: agentName,
           lastMessage: moment(element.lm).format("DD/MM/YYYY - HH:mm:ss"),
-          token: element.v.token,
-          visitorData: visitorData,
+          token: element.v.token
         });
       }
     }

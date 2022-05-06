@@ -21,6 +21,10 @@ app.get("/", (req, res) => {
   res.render(__dirname + "/index", { title: "", server: "", username: "" });
 });
 
+app.get("/login", (req, res) => {
+  res.render(__dirname + "/index2", { title: "", server: "", username: "" });
+});
+
 app.get("/tools", (req, res) => {
   res.render(__dirname + "/tools");
 });
