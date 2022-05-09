@@ -1,5 +1,10 @@
 var dataSet = [];
+var userDataSet = [];
 var channelsDataSet = [];
+
+var userImportModal = new bootstrap.Modal(
+  document.getElementById("userImportModal")
+);
 
 document
   .getElementById("privateChannels")
@@ -47,13 +52,13 @@ var rowPopupFormatter = function (e, row, onRendered) {
     container = document.createElement("div"),
     contents =
       "<strong style='font-size:1.2em;'>User Details</strong><br/><ul style='padding:0;  margin-top:10px; margin-bottom:0;'>";
-      contents += "<li><strong>Name:</strong> " + data.name + "</li>";
-      contents += "<li><strong>Username:</strong> " + data.username + "</li>";
-      contents += "<li><strong>Active:</strong> " + data.active + "</li>";
-      contents += "<li><strong>Last Login:</strong> " + data.daysIdle + "</li>";
-      contents += "<li><strong>Email:</strong> " + data.emails + "</li>";
-      contents += `<li><strong>Status:</strong> <span class='user-status-${data.status}'> <i class="fa-solid fa-circle-user"></i> ${data.status} </span></li>`;
-      contents += "</ul>";
+  contents += "<li><strong>Name:</strong> " + data.name + "</li>";
+  contents += "<li><strong>Username:</strong> " + data.username + "</li>";
+  contents += "<li><strong>Active:</strong> " + data.active + "</li>";
+  contents += "<li><strong>Last Login:</strong> " + data.daysIdle + "</li>";
+  contents += "<li><strong>Email:</strong> " + data.emails + "</li>";
+  contents += `<li><strong>Status:</strong> <span class='user-status-${data.status}'> <i class="fa-solid fa-circle-user"></i> ${data.status} </span></li>`;
+  contents += "</ul>";
 
   console.log(data);
 
@@ -184,18 +189,17 @@ async function getData(status) {
 
 createNewTable();
 
-
 async function createNewTable() {
   await getData("all");
   await getChannels(false);
   var table = new Tabulator("#table", {
-    height: 500, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+    height: "500px", // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
     data: dataSet, //assign data to table
     layout: "fitColumns", //fit columns to width of table (optional)
     pagination: "local",
-    paginationSize: 50,
+    paginationSize:50,
     paginationSizeSelector: [25, 50, 100, 500, 1000, 2000],
-    rowClickPopup:rowPopupFormatter, //add click popup to row
+    rowClickPopup: rowPopupFormatter, //add click popup to row
     columns: [
       //Define Table Columns
       {
@@ -230,6 +234,135 @@ async function createNewTable() {
       'Showing <span id="search_count"></span> results out of <span id="total_count"></span> ' +
       "</span>",
   });
+
+  document
+    .getElementById("import-users")
+    .addEventListener("click", async function () {
+      userImportModal.show();
+    });
+
+  function capitalize(string) {
+    return string.replace(/(?:^|\s)\S/g, function (a) {
+      return a.toUpperCase();
+    });
+  }
+
+  $(function () {
+    $("#upload").bind("click", function () {
+      var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+      if (regex.test($("#fileUpload").val().toLowerCase())) {
+        if (typeof FileReader != "undefined") {
+          var reader = new FileReader();
+          reader.onload = async function (e) {
+            var rows = e.target.result.split("\n");
+            for (var i = 1; i < rows.length - 1; i++) {
+              var cells = rows[i].split(",");
+              for (var j = 0; j < cells.length; j++) {
+                let username = cells[j].split(";")[0];
+                let name = cells[j].split(";")[1];
+                let email = cells[j].split(";")[2];
+                let password = cells[j].split(";")[3];
+                let role = cells[j].split(";")[4];
+
+                role = role.substring(0, role.length - 1);
+
+                role = role.split(" ")
+
+                userDataSet.push({
+                  username: username.toLowerCase(),
+                  name: name.toLowerCase(),
+                  email: email.toLowerCase(),
+                  password: password,
+                  role: role,
+                });
+              }
+            }
+
+           
+            if (rows.length - 2 > maxActiveUsers) {
+              sendInformation(
+                `Warning! You are trying to add more users than available seats (You have: ${maxActiveUsers} and want to add: ${rows.length - 2}), aborting.`,
+                "warning"
+              );
+            } else {
+              let btn = await sendConfirmation(
+                `Do you want to really want to add ${
+                  rows.length - 2
+                } registers?`
+              );
+              if (btn.isConfirmed) {
+                userImportModal.hide();
+                await createUser(userDataSet);
+              } else if (btn.isDenied) {
+                Swal.fire("Nothing was changed", "", "info");
+              }
+            }
+          };
+          reader.readAsText($("#fileUpload")[0].files[0]);
+        } else {
+          alert("This browser does not support HTML5.");
+        }
+      } else {
+        alert("Please upload a valid CSV file.");
+      }
+    });
+  });
+
+  async function createUser(data) {
+    let error = 0;
+    var i = 0;
+    $("#loading").show();
+    for (i = 0; i < data.length; i++) {
+      const element = data[i];
+
+      console.log(data[i])
+      console.log("Created: ", element.username, ". Total: ", i);
+      let request = await fetch(`${url}/api/v1/users.create`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth-Token": authToken,
+          "X-User-Id": userId,
+        },
+        body: JSON.stringify({
+          email: element.email,
+          name: capitalize(element.name),
+          password: element.password,
+          username: element.username,
+          active: true,
+          joinDefaultChannels: false,
+          verified: true,
+          sendWelcomeEmail: false,
+          requirePasswordChange: false,
+          roles: element.role
+        }),
+      });
+
+      let response = await request.json();
+
+      console.log(response);
+
+      if (!response.success) {
+        error += 1;
+        sendInformation(`Warning ${response.error}`, "warning");
+      }
+    }
+
+    dataSet = [];
+    await getData("all");
+    table.replaceData(dataSet);
+    if (error > 0) {
+      sendNotification(
+        "Warning!",
+        `Done creating ${i} registers! With ${error} problems`,
+        "warning"
+      );
+    } else {
+      sendNotification("Success!", `Done creating ${i} registers!`, "success");
+    }
+    console.log("Done creating: ", i, " registers.");
+    $("#loading").hide();
+  }
 
   document
     .getElementById("clear-filters")
@@ -458,11 +591,12 @@ async function createNewTable() {
 
       error = result.success;
       if (result.success === false) {
-        await sendNotification("Error!", `${result.error}`, "error");
+        await sendInformation(`Error! ${result.error}`, "error");
       }
     }
 
     dataSet = [];
+    await getData("all");
 
     table.replaceData(dataSet);
     if (error) {

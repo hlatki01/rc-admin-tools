@@ -89,6 +89,7 @@
                 <button id="delete-disabled-rows" class="btn btn-primary">Delete Disabled Rows</button>
                 <button id="show-disabled" class="btn btn-primary">Show Disabled</button>
                 <button id="show-enabled" class="btn btn-primary">Show Enabled</button>
+                <button id="import-users" class="btn btn-primary">Import List from CSV</button>
                 <button id="show-all" class="btn btn-success">Show All</button>
                 <button id="clear-filters" class="btn btn-outlined-primary">Clear Filters</button>
 
@@ -143,6 +144,39 @@
     </div>
 
   </main>
+
+  <!-- Modal -->
+  <div class="modal fade" id="userImportModal" tabindex="-1" role="dialog" aria-labelledby="userImportModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userImportModalLabel">Import Users</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="example" style="text-align: center; padding: 25px;">
+            <h5>Use this image as example to create the user list:</h5>
+            <p>Note: the roles MUST be divided using a single space.</p>
+            <img src="/assets/img/example.jpg">
+          </div>
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <input type="file" id="fileUpload" class="form-control" style="margin: 0 !important;">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" id="upload" type="button">Import</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <footer class="text-muted">
     <div class="container">

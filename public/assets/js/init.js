@@ -1,4 +1,6 @@
 let configs = ''
+let maxActiveUsers = 0
+let activeUsers = 0
 
 checkConfig()
 function checkConfig() {
@@ -14,6 +16,9 @@ function checkConfig() {
   else {
     $('#serverUrl').text(configs.serverUrl)
     $('#username').text(configs.username)
+
+    maxActiveUsers = configs.maxUsers.maxActiveUsers
+    activeUsers = configs.maxUsers.activeUsers
 
   }
 }

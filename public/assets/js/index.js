@@ -60,7 +60,7 @@
 
         let isAdmin = data.data.me.roles.includes("admin");
         if (isAdmin) {
-          setConfigs(url, username, data.data.authToken, data.data.userId)
+          await setConfigs(url, username, data.data.authToken, data.data.userId)
           window.location.href = "/tools"
         }
         else {
@@ -81,12 +81,28 @@
     }
   }
 
-  function setConfigs(serverUrl, username, authToken, userId) {
+  
+
+  async function setConfigs(serverUrl, username, authToken, userId) {
+
+    
+    let response = await fetch(`${serverUrl}/api/v1/licenses.maxActiveUsers`, {
+      method: "get",
+      headers: {
+        "X-Auth-Token": authToken,
+        "X-User-Id": userId,
+      },
+    });
+    let data = await response.json();    
+
+    console.log(data)
+
     const configs = {
       serverUrl: serverUrl,
       username: username,
       authToken: authToken,
-      userId: userId
+      userId: userId,
+      maxUsers: data
     }
 
     localStorage.setItem('configs', JSON.stringify(configs));
