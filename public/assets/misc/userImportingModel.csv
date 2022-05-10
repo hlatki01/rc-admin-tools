@@ -1,0 +1,3 @@
+Username;Name;Email;Password;roles
+luis;Luis Hlatki;luis@hlatki.com;pwd@12;user
+guilherme;Luis Guilherme;luis@guilherme.com;pwd@12;user/admin/livechat-agent

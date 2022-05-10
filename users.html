@@ -161,8 +161,32 @@
             <h5>Use this image as example to create the user list:</h5>
             <p>Note: the roles MUST be divided using a single space.</p>
             <img src="/assets/img/example.jpg">
+            <p>Download a model <a href="/assets/misc/userImportingModel.csv" download>here</a></p>
           </div>
-          <div class="mb-3">
+          <div class="mb-3">            
+            <div class="input-group mb-3">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="userActive">
+                <label class="form-check-label" for="userActive">Activate Users</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="userjoinDefaultChannels">
+                <label class="form-check-label" for="userjoinDefaultChannels">Join Users in the Default Channels</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="userVerified">
+                <label class="form-check-label" for="userVerified">Verify Users</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="userSendWelcomeEmail">
+                <label class="form-check-label" for="usersendWelcomeEmail">Send Welcome Email</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="userRequirePasswordChange">
+                <label class="form-check-label" for="userRequirePasswordChange">Require Users to Change the
+                  Password</label>
+              </div>
+            </div>
             <div class="input-group mb-3">
               <input type="file" id="fileUpload" class="form-control" style="margin: 0 !important;">
               <div class="input-group-append">

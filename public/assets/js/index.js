@@ -61,7 +61,7 @@
         let isAdmin = data.data.me.roles.includes("admin");
         if (isAdmin) {
           await setConfigs(url, username, data.data.authToken, data.data.userId)
-          window.location.href = "/tools"
+          //window.location.href = "/tools"
         }
         else {
           sendInformation(`You need to use an admin account in order to perform actions.`, "error");

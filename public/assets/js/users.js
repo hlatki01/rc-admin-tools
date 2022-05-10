@@ -197,7 +197,7 @@ async function createNewTable() {
     data: dataSet, //assign data to table
     layout: "fitColumns", //fit columns to width of table (optional)
     pagination: "local",
-    paginationSize:50,
+    paginationSize: 50,
     paginationSizeSelector: [25, 50, 100, 500, 1000, 2000],
     rowClickPopup: rowPopupFormatter, //add click popup to row
     columns: [
@@ -264,26 +264,34 @@ async function createNewTable() {
                 let password = cells[j].split(";")[3];
                 let role = cells[j].split(";")[4];
 
-                role = role.substring(0, role.length - 1);
+                role = role.replace(/[ ,]+/g, ",")
 
-                role = role.split(" ")
+                role = role.slice(0, -1);
+
+                role = role.split("/")
 
                 userDataSet.push({
                   username: username.toLowerCase(),
                   name: name.toLowerCase(),
                   email: email.toLowerCase(),
                   password: password,
-                  role: role,
+                  role: role
                 });
               }
             }
+            
+            if(maxActiveUsers === null){
+              maxActiveUsers = 9999
+            }
 
-           
             if (rows.length - 2 > maxActiveUsers) {
+              console.log("maxActiveUsers");
               sendInformation(
-                `Warning! You are trying to add more users than available seats (You have: ${maxActiveUsers} and want to add: ${rows.length - 2}), aborting.`,
+                `Warning! You are trying to add more users than available seats (You have: ${maxActiveUsers} and want to add: ${
+                  rows.length - 2
+                }), aborting.`,
                 "warning"
-              );
+              );            
             } else {
               let btn = await sendConfirmation(
                 `Do you want to really want to add ${
@@ -315,7 +323,7 @@ async function createNewTable() {
     for (i = 0; i < data.length; i++) {
       const element = data[i];
 
-      console.log(data[i])
+      console.log(data[i]);
       console.log("Created: ", element.username, ". Total: ", i);
       let request = await fetch(`${url}/api/v1/users.create`, {
         method: "post",
@@ -329,12 +337,12 @@ async function createNewTable() {
           name: capitalize(element.name),
           password: element.password,
           username: element.username,
-          active: true,
-          joinDefaultChannels: false,
-          verified: true,
-          sendWelcomeEmail: false,
-          requirePasswordChange: false,
-          roles: element.role
+          active: $('#userActive').is(":checked"),
+          joinDefaultChannels: $('#userjoinDefaultChannels').is(":checked"),
+          verified: $('#userVerified').is(":checked"),
+          sendWelcomeEmail: $('#userSendWelcomeEmail').is(":checked"),
+          requirePasswordChange: $('#userRequirePasswordChange').is(":checked"),
+          roles: element.role,
         }),
       });
 
