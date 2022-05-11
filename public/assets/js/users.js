@@ -60,8 +60,6 @@ var rowPopupFormatter = function (e, row, onRendered) {
   contents += `<li><strong>Status:</strong> <span class='user-status-${data.status}'> <i class="fa-solid fa-circle-user"></i> ${data.status} </span></li>`;
   contents += "</ul>";
 
-  console.log(data);
-
   container.innerHTML = contents;
 
   return container;
@@ -213,11 +211,29 @@ async function createNewTable() {
       },
       { title: "id", field: "id" },
       { title: "daysIdle", field: "daysIdle" },
-      { title: "active", field: "active" },
+      {
+        title: "active",
+        field: "active",
+        editor:true,
+        hozAlign:"center",
+        formatter:"tickCross",
+        cellEdited: async function (cell) {
+          let userRow = cell._cell.row.data;
+          await updateUser(userRow);
+        },
+      },
       { title: "username", field: "username", headerFilter: "input" },
-      { title: "name", field: "name", headerFilter: "input" },
+      {
+        title: "name",
+        field: "name",
+        headerFilter: "input",
+        editor: "input",
+        cellEdited: async function (cell) {
+          let userRow = cell._cell.row.data;
+          await updateUser(userRow);
+        },
+      },
       { title: "emails", field: "emails", headerFilter: "input" },
-      { title: "lastLogin", field: "lastLogin" },
       {
         title: "Last Login",
         width: 300,
@@ -264,24 +280,24 @@ async function createNewTable() {
                 let password = cells[j].split(";")[3];
                 let role = cells[j].split(";")[4];
 
-                role = role.replace(/[ ,]+/g, ",")
+                role = role.replace(/[ ,]+/g, ",");
 
                 role = role.slice(0, -1);
 
-                role = role.split("/")
+                role = role.split("/");
 
                 userDataSet.push({
                   username: username.toLowerCase(),
                   name: name.toLowerCase(),
                   email: email.toLowerCase(),
                   password: password,
-                  role: role
+                  role: role,
                 });
               }
             }
-            
-            if(maxActiveUsers === null){
-              maxActiveUsers = 9999
+
+            if (maxActiveUsers === null) {
+              maxActiveUsers = 9999;
             }
 
             if (rows.length - 2 > maxActiveUsers) {
@@ -291,7 +307,7 @@ async function createNewTable() {
                   rows.length - 2
                 }), aborting.`,
                 "warning"
-              );            
+              );
             } else {
               let btn = await sendConfirmation(
                 `Do you want to really want to add ${
@@ -316,6 +332,39 @@ async function createNewTable() {
     });
   });
 
+  async function updateUser(data) {
+    var i = 0;
+
+    if (data.username != currentUser){
+      data.active = true
+    }
+    
+    $("#loading").show();
+    console.log("Updated: ", data.username, ". Total: ", i);
+    let request = await fetch(`${url}/api/v1/users.update`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Auth-Token": authToken,
+        "X-User-Id": userId,
+      },
+      body: JSON.stringify({
+        userId: data.id,
+        data: {
+          name: data.name,
+          active: data.active,
+        },
+      }),
+    });
+
+    let response = await request.json();
+    
+    if(response.success){
+      sendInformation(`Success! ${response.user.name} was updated.`, "success");
+    }
+    $("#loading").hide();
+  }
+
   async function createUser(data) {
     let error = 0;
     var i = 0;
@@ -323,7 +372,6 @@ async function createNewTable() {
     for (i = 0; i < data.length; i++) {
       const element = data[i];
 
-      console.log(data[i]);
       console.log("Created: ", element.username, ". Total: ", i);
       let request = await fetch(`${url}/api/v1/users.create`, {
         method: "post",
@@ -337,18 +385,16 @@ async function createNewTable() {
           name: capitalize(element.name),
           password: element.password,
           username: element.username,
-          active: $('#userActive').is(":checked"),
-          joinDefaultChannels: $('#userjoinDefaultChannels').is(":checked"),
-          verified: $('#userVerified').is(":checked"),
-          sendWelcomeEmail: $('#userSendWelcomeEmail').is(":checked"),
-          requirePasswordChange: $('#userRequirePasswordChange').is(":checked"),
+          active: $("#userActive").is(":checked"),
+          joinDefaultChannels: $("#userjoinDefaultChannels").is(":checked"),
+          verified: $("#userVerified").is(":checked"),
+          sendWelcomeEmail: $("#userSendWelcomeEmail").is(":checked"),
+          requirePasswordChange: $("#userRequirePasswordChange").is(":checked"),
           roles: element.role,
         }),
       });
 
       let response = await request.json();
-
-      console.log(response);
 
       if (!response.success) {
         error += 1;

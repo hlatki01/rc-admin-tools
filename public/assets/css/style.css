@@ -115,3 +115,17 @@ input {
   margin-top: 5px;
 }
 
+.tabulator .tabulator-header .tabulator-col .tabulator-col-content {
+  text-align: center;
+}
+
+.btn-group .btn+.btn, .btn-group .btn+.btn-group, .btn-group .btn-group+.btn, .btn-group .btn-group+.btn-group, .btn-group-vertical .btn+.btn, .btn-group-vertical .btn+.btn-group, .btn-group-vertical .btn-group+.btn, .btn-group-vertical .btn-group+.btn-group {
+  margin-left: 3px !important;
+  border-radius: 5px !important;
+}
+
+.btn-group>.btn:first-child {
+  margin-left: 0;
+  border-radius: 5px !important;
+}
+

@@ -1,6 +1,5 @@
 var dataSet = [];
-let isChecked = false
-
+let isChecked = false;
 
 async function getData(allTypes, archivedStatus) {
   let types = "";
@@ -73,8 +72,24 @@ async function getData(allTypes, archivedStatus) {
 
 createNewTable();
 
+async function getDepartmentMembers(department) {
+  let response = await fetch(
+    `${url}/api/v1/channels.members?roomId=${department.id}`,
+    {
+      method: "get",
+      headers: {
+        "X-Auth-Token": authToken,
+        "X-User-Id": userId,
+      },
+    }
+  );
+  let data = await response.json();
+  return data;
+}
+
 async function createNewTable() {
   await getData(isChecked, "all");
+
   var table = new Tabulator("#table", {
     height: 500, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
     data: dataSet, //assign data to table
