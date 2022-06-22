@@ -77,7 +77,8 @@
 
     } catch (error) {
       $('#loading').hide();
-      sendInformation(`The URL doesn't seems to be a valid Rocket.Chat server`, "error");
+      console.log(error);
+      sendInformation(`It looks like you are having issues with CORS, please check out the readme.`, "error");
     }
   }
 

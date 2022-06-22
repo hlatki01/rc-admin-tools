@@ -30,6 +30,8 @@ async function getData(status) {
     for (let i = 0; i < data.rooms.length; i++) {
       const element = data.rooms[i];
 
+      console.log(element);
+
       let agentName = "";
       let isOpen = false;
 
@@ -52,6 +54,7 @@ async function getData(status) {
         dataSet.push({
           id: element._id,
           msgs: element.msgs,
+          departmentId: element.departmentId,
           isOpen: isOpen,
           guestname: element.fname,
           servedBy: agentName,
@@ -63,6 +66,7 @@ async function getData(status) {
         dataSet.push({
           id: element._id,
           msgs: element.msgs,
+          departmentId: element.departmentId,
           isOpen: isOpen,
           guestname: element.fname,
           servedBy: agentName,
@@ -74,6 +78,7 @@ async function getData(status) {
         dataSet.push({
           id: element._id,
           msgs: element.msgs,
+          departmentId: element.departmentId,
           isOpen: isOpen,
           guestname: element.fname,
           servedBy: agentName,
@@ -107,6 +112,7 @@ async function createNewTable() {
     },
     { title: "Room Id", field: "id" },
     { title: "Message Count", field: "msgs", width: 100 },
+    { title: "Department", field: "departmentId", headerFilter: "input" },
     { title: "Is Open", field: "isOpen", width: 100 },
     { title: "Guest Name", field: "guestname", headerFilter: "input" },
     { title: "Agent Name", field: "servedBy", headerFilter: "input" },
