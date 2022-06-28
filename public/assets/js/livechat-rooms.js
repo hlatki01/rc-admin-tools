@@ -33,12 +33,19 @@ async function getData(status) {
       console.log(element);
 
       let agentName = "";
+      let departmentName = "";
       let isOpen = false;
 
       if (element.open) {
         isOpen = true;
       } else {
         isOpen = false;
+      }
+
+      if (element.department) {
+        departmentName = element.department.name;
+      } else {
+        departmentName = "undefined";
       }
 
       let visitorData = [];
@@ -55,9 +62,11 @@ async function getData(status) {
           id: element._id,
           msgs: element.msgs,
           departmentId: element.departmentId,
+          departmentName: departmentName,
           isOpen: isOpen,
           guestname: element.fname,
           servedBy: agentName,
+          queuedAt: moment(element.queuedAt).format("DD/MM/YYYY - HH:mm:ss"),
           lastMessage: moment(element.lm).format("DD/MM/YYYY - HH:mm:ss"),
           token: element.v.token
         });
@@ -67,9 +76,11 @@ async function getData(status) {
           id: element._id,
           msgs: element.msgs,
           departmentId: element.departmentId,
+          departmentName: departmentName,
           isOpen: isOpen,
           guestname: element.fname,
           servedBy: agentName,
+          queuedAt: moment(element.queuedAt).format("DD/MM/YYYY - HH:mm:ss"),
           lastMessage: moment(element.lm).format("DD/MM/YYYY - HH:mm:ss"),
           token: element.v.token
         });
@@ -79,9 +90,11 @@ async function getData(status) {
           id: element._id,
           msgs: element.msgs,
           departmentId: element.departmentId,
+          departmentName: departmentName,
           isOpen: isOpen,
           guestname: element.fname,
           servedBy: agentName,
+          queuedAt: moment(element.queuedAt).format("DD/MM/YYYY - HH:mm:ss"),
           lastMessage: moment(element.lm).format("DD/MM/YYYY - HH:mm:ss"),
           token: element.v.token
         });
@@ -113,17 +126,19 @@ async function createNewTable() {
     { title: "Room Id", field: "id" },
     { title: "Message Count", field: "msgs", width: 100 },
     { title: "Department", field: "departmentId", headerFilter: "input" },
+    { title: "Department Name", field: "departmentName", headerFilter: "input" },
     { title: "Is Open", field: "isOpen", width: 100 },
     { title: "Guest Name", field: "guestname", headerFilter: "input" },
     { title: "Agent Name", field: "servedBy", headerFilter: "input" },
     {
-      title: "Date",
+      title: "Queued At",
       width: 300,
-      field: "lastMessage",
+      field: "queuedAt",
       sorter: "date",
       headerFilter: dateFilterEditor,
       headerFilterFunc: dateFilterFunction,
     },
+    { title: "Last Message", field: "lastMessage" },
     { title: "Token", field: "token" },
   ];
 
