@@ -15,6 +15,28 @@ async function getVisitorData(visitor) {
   }
 }
 
+async function contactInfo(contact) {
+  let response = await fetch(
+    `${url}/api/v1/omnichannel/contact?contactId=${contact}`,
+    {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Auth-Token": authToken,
+        "X-User-Id": userId,
+      },
+    }
+  );
+
+  let result = await response.json();
+
+  if (result.success) {
+    return result;
+  }
+
+  $("#loading").hide();
+}
+
 async function getData(status) {
   $("#loading").show();
   let response = await fetch(`${url}/api/v1/livechat/rooms`, {
@@ -30,7 +52,29 @@ async function getData(status) {
     for (let i = 0; i < data.rooms.length; i++) {
       const element = data.rooms[i];
 
-      console.log(element);
+      
+      let contact = await contactInfo(element.v._id);
+
+      let livechatData = ""
+      let tags = ""
+
+      if(element.tags){
+        tags = JSON.stringify(element.tags)
+      }
+      else{
+        tags = "undefined"
+      }
+      
+      if(contact.contact){
+        if(contact.contact.livechatData){
+          livechatData = JSON.stringify(contact.contact.livechatData)         
+        }
+        else{
+          livechatData = "undefined"
+        }
+      }
+
+      
 
       let agentName = "";
       let departmentName = "";
@@ -50,7 +94,6 @@ async function getData(status) {
 
       let visitorData = [];
 
-     
       if (!data.rooms[i].servedBy) {
         agentName = "undefined";
       } else {
@@ -63,12 +106,14 @@ async function getData(status) {
           msgs: element.msgs,
           departmentId: element.departmentId,
           departmentName: departmentName,
+          customFields: livechatData,
+          tags: tags,
           isOpen: isOpen,
           guestname: element.fname,
           servedBy: agentName,
           queuedAt: moment(element.queuedAt).format("DD/MM/YYYY - HH:mm:ss"),
           lastMessage: moment(element.lm).format("DD/MM/YYYY - HH:mm:ss"),
-          token: element.v.token
+          token: element.v.token,
         });
       }
       if (status === "open" && isOpen === true) {
@@ -77,12 +122,14 @@ async function getData(status) {
           msgs: element.msgs,
           departmentId: element.departmentId,
           departmentName: departmentName,
+          customFields: livechatData,
+          tags: tags,
           isOpen: isOpen,
           guestname: element.fname,
           servedBy: agentName,
           queuedAt: moment(element.queuedAt).format("DD/MM/YYYY - HH:mm:ss"),
           lastMessage: moment(element.lm).format("DD/MM/YYYY - HH:mm:ss"),
-          token: element.v.token
+          token: element.v.token,
         });
       }
       if (status === "closed" && isOpen === false) {
@@ -91,12 +138,14 @@ async function getData(status) {
           msgs: element.msgs,
           departmentId: element.departmentId,
           departmentName: departmentName,
+          customFields: livechatData,
+          tags: tags,
           isOpen: isOpen,
           guestname: element.fname,
           servedBy: agentName,
           queuedAt: moment(element.queuedAt).format("DD/MM/YYYY - HH:mm:ss"),
           lastMessage: moment(element.lm).format("DD/MM/YYYY - HH:mm:ss"),
-          token: element.v.token
+          token: element.v.token,
         });
       }
     }
@@ -126,7 +175,21 @@ async function createNewTable() {
     { title: "Room Id", field: "id" },
     { title: "Message Count", field: "msgs", width: 100 },
     { title: "Department", field: "departmentId", headerFilter: "input" },
-    { title: "Department Name", field: "departmentName", headerFilter: "input" },
+    {
+      title: "Department Name",
+      field: "departmentName",
+      headerFilter: "input",
+    },
+    {
+      title: "Custom Fields",
+      field: "customFields",
+      headerFilter: "input",
+    },
+    {
+      title: "Tags",
+      field: "tags",
+      headerFilter: "input",
+    },
     { title: "Is Open", field: "isOpen", width: 100 },
     { title: "Guest Name", field: "guestname", headerFilter: "input" },
     { title: "Agent Name", field: "servedBy", headerFilter: "input" },
