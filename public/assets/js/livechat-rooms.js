@@ -52,29 +52,7 @@ async function getData(status) {
     for (let i = 0; i < data.rooms.length; i++) {
       const element = data.rooms[i];
 
-      
-      let contact = await contactInfo(element.v._id);
-
-      let livechatData = ""
-      let tags = ""
-
-      if(element.tags){
-        tags = JSON.stringify(element.tags)
-      }
-      else{
-        tags = "undefined"
-      }
-      
-      if(contact.contact){
-        if(contact.contact.livechatData){
-          livechatData = JSON.stringify(contact.contact.livechatData)         
-        }
-        else{
-          livechatData = "undefined"
-        }
-      }
-
-      
+       
 
       let agentName = "";
       let departmentName = "";
@@ -106,8 +84,6 @@ async function getData(status) {
           msgs: element.msgs,
           departmentId: element.departmentId,
           departmentName: departmentName,
-          customFields: livechatData,
-          tags: tags,
           isOpen: isOpen,
           guestname: element.fname,
           servedBy: agentName,
@@ -122,8 +98,6 @@ async function getData(status) {
           msgs: element.msgs,
           departmentId: element.departmentId,
           departmentName: departmentName,
-          customFields: livechatData,
-          tags: tags,
           isOpen: isOpen,
           guestname: element.fname,
           servedBy: agentName,
@@ -138,8 +112,6 @@ async function getData(status) {
           msgs: element.msgs,
           departmentId: element.departmentId,
           departmentName: departmentName,
-          customFields: livechatData,
-          tags: tags,
           isOpen: isOpen,
           guestname: element.fname,
           servedBy: agentName,
@@ -178,16 +150,6 @@ async function createNewTable() {
     {
       title: "Department Name",
       field: "departmentName",
-      headerFilter: "input",
-    },
-    {
-      title: "Custom Fields",
-      field: "customFields",
-      headerFilter: "input",
-    },
-    {
-      title: "Tags",
-      field: "tags",
       headerFilter: "input",
     },
     { title: "Is Open", field: "isOpen", width: 100 },
